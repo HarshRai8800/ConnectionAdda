@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model userSchema {
+  id           Int           @id @default(autoincrement()) @unique
+  email        String        @unique
+  password     String
+  firstname    String        @default("Jonny")
+  lastname     String        @default("Deep")
+  image        String?
+  color        Int?
+  profileSetup Boolean        @default(false)
+  contacts     Contact[]
+  sender       messageSchema[] @relation(name: "SenderRelation")
+  recipient    messageSchema[] @relation(name: "RecipientRelation")
+  channels     channelSchema[]  @relation(name: "channelrelation")
+  admin        channelSchema[]   @relation(name: "adminrelation")
+
+}
+
+model Contact {
+  index        Int        @id @default(autoincrement())
+  id  Int
+  email     String                                        
+  firstname String     @default("Contact")
+  lastname  String     @default("User")
+  image     String     @default("image")
+  color     String     @default("red")
+  userId    Int
+  user      userSchema @relation(fields: [userId], references: [id])
+}
+
+model messageSchema {
+  id           Int        @id @default(autoincrement())
+  senderId     Int
+  recipientId  Int?
+  channelId    Int?       
+  messageType  msgType
+  content      String?
+  fileUrl      String?
+  timestamp    DateTime @default(now())
+  sender       userSchema @relation(name: "SenderRelation", fields: [senderId], references: [id])
+  recipient    userSchema? @relation(name: "RecipientRelation", fields: [recipientId], references: [id])
+  channel      channelSchema? @relation(name: "ChannelMessages", fields: [channelId], references: [id]) // Relation with channelSchema
+
+  @@index([channelId]) // Index for better query performance
+}
+
+model channelSchema {
+  id           Int            @id @default(autoincrement())
+  name         String
+  members      userSchema[]   @relation(name: "channelrelation")
+  admin        Int
+  messages     messageSchema[] @relation(name: "ChannelMessages")
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  adminRelation userSchema     @relation(name: "adminrelation", fields: [admin], references: [id])
+}
+
+
+model members{
+  id Int @id @default(autoincrement())
+
+}
+
+enum msgType {
+  contact
+  channel
+}
+

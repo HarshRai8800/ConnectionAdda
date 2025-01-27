@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "messageSchema" ALTER COLUMN "content" DROP NOT NULL,
+ALTER COLUMN "timestamp" SET DEFAULT CURRENT_TIMESTAMP;
