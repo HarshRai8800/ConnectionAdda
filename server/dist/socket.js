@@ -5,7 +5,7 @@ export const socket = (server) => {
     console.log("hii");
     const io = new Server(server, {
         cors: {
-            origin: ["https://connectionadda.com"],
+            origin: ["https://connectionadda.in"],
             methods: ["GET", "POST", "DELETE", "PUT"],
             credentials: true,
         }

@@ -18,7 +18,7 @@ export const prisma = new PrismaClient();
 socket(Server);
 const port = process.env.PORT;
 app.use(cors({
-    origin: "https://connectionadda.com",
+    origin: ["https://connectionadda.in"],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true
 }));
