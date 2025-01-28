@@ -56,9 +56,6 @@ sameSite:"none"
 
 } catch (error) {
    
-    return res.status(411).json({
-        success:false,
-        message:"something went wrong "
-    })
+    return res.status(411).json(error)
 }
 }
